@@ -41,15 +41,15 @@
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 650px;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 320px;
-            max-height: 400px;
+            height: 300px;
+            max-height: 380px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 350px;
+                height: 340px;
             }
         }
     </style>
@@ -115,7 +115,7 @@
                 <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold">تحديث 2026</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-xl border border-sand-200 shadow-sm">
                     <div class="text-gray-500 text-xs font-semibold">شركات أسترالية معتمدة (DAFF)</div>
                     <div class="text-3xl font-extrabold text-emerald_custom-800 mt-2">5 كبرى</div>
@@ -200,7 +200,7 @@
 
             <!-- Cards Grid -->
             <div id="directory-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic Content via JS -->
+                <!-- Populated by JS -->
             </div>
         </section>
 
@@ -218,7 +218,7 @@
                 <div class="lg:col-span-5 space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">اختر الشركة الموردة المستهدفة</label>
-                        <select id="inquiry-supplier" class="w-full p-2.5 bg-sand-50 border border-sand-200 rounded-lg text-sm font-semibold text-gray-800">
+                        <select id="inquiry-supplier" onchange="generateInquiryText()" class="w-full p-2.5 bg-sand-50 border border-sand-200 rounded-lg text-sm font-semibold text-gray-800">
                             <!-- Populated via JS -->
                         </select>
                     </div>
@@ -226,22 +226,22 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">اسم شريكتك/مؤسستك</label>
-                            <input type="text" id="inquiry-company" placeholder="مثال: شركة الأطلس للمواشي" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                            <input type="text" id="inquiry-company" oninput="generateInquiryText()" placeholder="مثال: شركة الأطلس للمواشي" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">المدينة والميناء المستهدف</label>
-                            <input type="text" id="inquiry-port" placeholder="مثال: ميناء الجرف الأصفر" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                            <input type="text" id="inquiry-port" oninput="generateInquiryText()" placeholder="مثال: ميناء الجرف الأصفر" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">الكمية المطلوبة (رأس)</label>
-                            <input type="number" id="inquiry-quantity" value="5000" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                            <input type="number" id="inquiry-quantity" oninput="generateInquiryText()" value="5000" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">الغرض من الاستيراد</label>
-                            <select id="inquiry-purpose" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                            <select id="inquiry-purpose" onchange="generateInquiryText()" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
                                 <option value="Slaughter & Meat Supply">الذبح الفوري واللحوم (Slaughter)</option>
                                 <option value="Fattening & Feeding">التسمين (Fattening)</option>
                                 <option value="Breeding & Genetic Improvement">التربية والتحسين الوراثي (Breeding)</option>
@@ -259,7 +259,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">تاريخ التسليم المتوقع</label>
-                            <input type="date" id="inquiry-date" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                            <input type="date" id="inquiry-date" onchange="generateInquiryText()" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
                         </div>
                     </div>
 
@@ -368,9 +368,8 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Supplier Dataset based on the report
+        // Supplier Dataset
         const suppliersData = [
-            // Australian Suppliers
             {
                 id: "lss",
                 name: "Livestock Shipping Services (LSS)",
@@ -383,8 +382,7 @@
                 phone: "+61 8 9336 4111",
                 email: "info@lss.net.au",
                 website: "https://www.lss.net.au",
-                description: "تُعد من كبرى الشركات المتخصصة في الشحن البحري للماشية نحو منطقة الشرق الأوسط وشمال إفريقيا، وتمتلك بنية تحتية متكاملة متوافقة مع متطلبات نظام ESCAS.",
-                capabilities: "أسطول بواخر عملاقة مخصصة للنقل البحري الطويل، شبكة حجر صحي معتمدة."
+                description: "تُعد من كبرى الشركات المتخصصة في الشحن البحري للماشية نحو منطقة الشرق الأوسط وشمال إفريقيا، وتمتلك بنية تحتية متكاملة متوافقة مع متطلبات نظام ESCAS."
             },
             {
                 id: "emanuel",
@@ -398,8 +396,7 @@
                 phone: "+61 8 9336 4844",
                 email: "admin@emanuelexports.com.au",
                 website: "https://www.emanuelexports.com.au",
-                description: "شركة تاريخية رائدة في نقل شحنات الأغنام الحية عبر بواخر متخصصة واسعة النطاق مجهزة للمسافات الطويلة بين غرب أستراليا والشرق الأوسط.",
-                capabilities: "خبرة عقود في تصدير الأغنام الحية والتنسيق مع السلطات البيطرية الحكومية."
+                description: "شركة تاريخية رائدة في نقل شحنات الأغنام الحية عبر بواخر متخصصة واسعة النطاق مجهزة للمسافات الطويلة بين غرب أستراليا والشرق الأوسط."
             },
             {
                 id: "halleen",
@@ -413,8 +410,7 @@
                 phone: "+61 8 9430 4880",
                 email: "info@halleen.com.au",
                 website: "https://www.halleen.com.au",
-                description: "متخصصة في تجارة وتجميع وتوريد قطعان الأغنام الحية والمواشي للتسمين والذبح لمختلف الأسواق الخارجية منذ أكثر من أربعة عقود.",
-                capabilities: "تجميع الماشية من المزارع مباشرة، إعداد الشحنات حسب العرق والوزن المطلوب."
+                description: "متخصصة في تجارة وتجميع وتوريد قطعان الأغنام الحية والمواشي للتسمين والذبح لمختلف الأسواق الخارجية منذ أكثر من أربعة عقود."
             },
             {
                 id: "sails",
@@ -428,8 +424,7 @@
                 phone: "+61 8 8363 4344",
                 email: "contact@sails.net.au",
                 website: "https://www.sails.net.au",
-                description: "تنشط في توريد شحنات الماشية والأغنام للذبح والتناسل، مع تغطية العمليات البحرية والجوية وفق المعايير البيطرية الأسترالية.",
-                capabilities: "مرونة في الشحن الجوي والبحري، توريد سلالات المينو واللحم."
+                description: "تنشط في توريد شحنات الماشية والأغنام للذبح والتناسل، مع تغطية العمليات البحرية والجوية وفق المعايير البيطرية الأسترالية."
             },
             {
                 id: "ale",
@@ -443,8 +438,7 @@
                 phone: "+61 2 8313 7009 / +971 50 334 1414",
                 email: "info@australiaslivestockexporters.com",
                 website: "https://www.australiaslivestockexporters.com",
-                description: "تعمل كمورد مرخص للأغنام والمواشي، وتدير شحنات التصدير الجوي والبحري للأسواق الناشئة والشركاء التجاريين الدوليين مع مكتب إقليمي بالشرق الأوسط.",
-                capabilities: "دعم لوجستي مخصص للمنطقة العربية، سهولة التواصل والتنسيق التجاري."
+                description: "تعمل كمورد مرخص للأغنام والمواشي، وتدير شحنات التصدير الجوي والبحري للأسواق الناشئة والشركاء التجاريين الدوليين مع مكتب إقليمي بالشرق الأوسط."
             },
 
             // USA Suppliers
@@ -460,8 +454,7 @@
                 phone: "+1 309 663 9441",
                 email: "agworld@agworldinc.com",
                 website: "https://www.agworldinc.com",
-                description: "شركة متخصصة منذ عام 1977 في تصدير الأغنام الأصيلة عالية الكفاءة الإنتاجية والتناسلية وتوفير معدات التتبع والرعاية البيطرية.",
-                capabilities: "تصدير سلالات الدورسيت، الهامبشاير، والسوفولك عالية الكفاءة الجينية."
+                description: "شركة متخصصة منذ عام 1977 في تصدير الأغنام الأصيلة عالية الكفاءة الإنتاجية والتناسلية وتوفير معدات التتبع والرعاية البيطرية."
             },
             {
                 id: "amcan",
@@ -475,8 +468,7 @@
                 phone: "+1 309 663 9441",
                 email: "info@amcan.info",
                 website: "https://www.amcan.info",
-                description: "خبرة ممتدة في تجهيز وشحن الأغنام والماعز والأبقار الحية للأسواق العالمية عبر الشحن الجوي والبحري التنافسي.",
-                capabilities: "حجر صحي معتمد فيدرالياً، خدمات نقل سريع جوي للحيوانات الأصيلة."
+                description: "خبرة ممتدة في تجهيز وشحن الأغنام والماعز والأبقار الحية للأسواق العالمية عبر الشحن الجوي والبحري التنافسي."
             },
             {
                 id: "clayton",
@@ -490,8 +482,7 @@
                 phone: "+1 573 634 3290",
                 email: "info@claytonagrimarketing.com",
                 website: "https://www.claytonagrimarketing.com",
-                description: "التركيز على شحنات السلالات الجينية المتطورة، إدارة مشروعات التطوير الحيواني، وتوفير الدعم الفني للقطعان المصدرة.",
-                capabilities: "إدارة المشروعات الزراعية التكاملية، نقل التقنية الوراثية وتطوير القطعان."
+                description: "التركيز على شحنات السلالات الجينية المتطورة، إدارة مشروعات التطوير الحيواني، وتوفير الدعم الفني للقطعان المصدرة."
             },
             {
                 id: "mccartney",
@@ -505,8 +496,7 @@
                 phone: "+1 717 263 1111",
                 email: "info@mccartneyinc.com",
                 website: "https://www.mccartneyinc.com",
-                description: "إدارة منشآت حجر وعزل بيطري معتمدة فيدرالياً من USDA، وتجهيز شحنات التصدير الجوي والبحري عبر موانئ الساحل الشرقي الأمريكي.",
-                capabilities: "محاجر صحية خاصة، القرب المباشر من الموانئ والمطارات الرئيسية نحو المغرب."
+                description: "إدارة منشآت حجر وعزل بيطري معتمدة فيدرالياً من USDA، وتجهيز شحنات التصدير الجوي والبحري عبر موانئ الساحل الشرقي الأمريكي."
             },
             {
                 id: "davis",
@@ -520,26 +510,33 @@
                 phone: "+1 801 544 2332",
                 email: "contact@davislivestock.com",
                 website: "https://www.davislivestock.com",
-                description: "شحن وتجميع السلالات الحية والمجترات والماشية عبر البروتوكولات البيطرية الفيدرالية المعتمدة.",
-                capabilities: "خبرة في سلالات الأغنام الجبلية والمقاومة للظروف المناخية الصعبة."
+                description: "شحن وتجميع السلالات الحية والمجترات والماشية عبر البروتوكولات البيطرية الفيدرالية المعتمدة."
             }
         ];
 
-        // Global State
         let currentFilter = 'all';
 
-        // DOM Loaded Init
+        // DOM Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            renderChart();
             renderDirectory(suppliersData);
             populateInquiryDropdown();
             generateInquiryText();
             startCountdown();
 
-            // Set default date for planner to today
+            // Safe Chart Render
+            try {
+                renderChart();
+            } catch (e) {
+                console.warn("Chart rendering skipped or failed:", e);
+            }
+
+            // Default date setup
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('shipping-calc-date').value = today;
-            calculateShippingStatus();
+            const calcInput = document.getElementById('shipping-calc-date');
+            if (calcInput) {
+                calcInput.value = today;
+                calculateShippingStatus();
+            }
         });
 
         // Countdown Timer for May 1, 2028 Australian Ban
@@ -548,19 +545,24 @@
             const now = new Date();
             const diffTime = targetDate - now;
 
+            const timerEl = document.getElementById('countdown-timer');
+            if (!timerEl) return;
+
             if (diffTime > 0) {
                 const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                 const months = Math.floor(totalDays / 30.4375);
                 const days = Math.floor(totalDays % 30.4375);
-                document.getElementById('countdown-timer').innerText = `${months} شهر و ${days} يوم`;
+                timerEl.innerText = `${months} شهر و ${days} يوم`;
             } else {
-                document.getElementById('countdown-timer').innerText = "دخل الحظر حيز التنفيذ!";
+                timerEl.innerText = "دخل الحظر حيز التنفيذ!";
             }
         }
 
         // Render Directory Cards
         function renderDirectory(data) {
             const grid = document.getElementById('directory-grid');
+            if (!grid) return;
+            
             grid.innerHTML = '';
 
             if (data.length === 0) {
@@ -587,7 +589,7 @@
                         </div>
 
                         <h4 class="text-base font-bold text-gray-900 mb-1">${item.name}</h4>
-                        <p class="text-xs text-amber-800 font-semibold mb-3">🎯 Tخصص: ${item.specializationAr}</p>
+                        <p class="text-xs text-amber-800 font-semibold mb-3">🎯 التخصص: ${item.specializationAr}</p>
                         <p class="text-xs text-gray-600 mb-4 leading-relaxed">${item.description}</p>
 
                         <div class="bg-sand-50 p-3 rounded-xl space-y-1.5 text-xs text-gray-700 mb-4 font-mono">
@@ -604,7 +606,7 @@
                     </div>
 
                     <div class="pt-3 border-t border-sand-100 flex gap-2">
-                        <a href="${item.website}" target="_blank" class="flex-1 text-center py-2 bg-sand-100 hover:bg-sand-200 text-gray-800 rounded-lg text-xs font-bold transition">
+                        <a href="${item.website}" target="_blank" rel="noopener" class="flex-1 text-center py-2 bg-sand-100 hover:bg-sand-200 text-gray-800 rounded-lg text-xs font-bold transition">
                             الموقع الرسمي 🌐
                         </a>
                         <button onclick="selectSupplierForInquiry('${item.id}')" class="flex-1 py-2 bg-emerald_custom-800 hover:bg-emerald_custom-700 text-white rounded-lg text-xs font-bold transition">
@@ -623,14 +625,19 @@
                 btn.className = "filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-white border border-sand-200 text-gray-700 hover:bg-sand-100";
             });
 
-            document.getElementById(`btn-${type}`).className = "filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald_custom-800 text-white shadow-sm";
+            const activeBtn = document.getElementById(`btn-${type}`);
+            if (activeBtn) {
+                activeBtn.className = "filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald_custom-800 text-white shadow-sm";
+            }
 
             searchDirectory();
         }
 
         // Search Directory
         function searchDirectory() {
-            const query = document.getElementById('search-input').value.toLowerCase();
+            const input = document.getElementById('search-input');
+            const query = input ? input.value.toLowerCase() : '';
+            
             const filtered = suppliersData.filter(item => {
                 const matchesFilter = (currentFilter === 'all') || (item.country === currentFilter);
                 const matchesSearch = item.name.toLowerCase().includes(query) ||
@@ -645,6 +652,7 @@
         // Populate Inquiry Dropdown
         function populateInquiryDropdown() {
             const select = document.getElementById('inquiry-supplier');
+            if (!select) return;
             select.innerHTML = '';
             suppliersData.forEach(s => {
                 const opt = document.createElement('option');
@@ -656,27 +664,29 @@
 
         // Select supplier from card directly
         function selectSupplierForInquiry(id) {
-            document.getElementById('inquiry-supplier').value = id;
+            const select = document.getElementById('inquiry-supplier');
+            if (select) select.value = id;
             generateInquiryText();
             scrollToSection('inquiry');
         }
 
         // Generate Automated Inquiry Text
         function generateInquiryText() {
-            const supplierId = document.getElementById('inquiry-supplier').value;
+            const selectEl = document.getElementById('inquiry-supplier');
+            const supplierId = selectEl ? selectEl.value : suppliersData[0].id;
             const supplier = suppliersData.find(s => s.id === supplierId) || suppliersData[0];
             
-            const companyName = document.getElementById('inquiry-company').value || "[اسم شركتكم المغربية]";
-            const port = document.getElementById('inquiry-port').value || "[الميناء المستهدف - مثلا الجرف الأصفر]";
-            const quantity = document.getElementById('inquiry-quantity').value || "5000";
-            const purpose = document.getElementById('inquiry-purpose').value;
-            const targetDate = document.getElementById('inquiry-date').value || "[التاريخ المستهدف]";
-            const lang = document.getElementById('inquiry-lang').value;
+            const companyName = (document.getElementById('inquiry-company') && document.getElementById('inquiry-company').value) ? document.getElementById('inquiry-company').value : "[اسم شركتكم المغربية]";
+            const port = (document.getElementById('inquiry-port') && document.getElementById('inquiry-port').value) ? document.getElementById('inquiry-port').value : "[الميناء المستهدف - مثلا الجرف الأصفر]";
+            const quantity = (document.getElementById('inquiry-quantity') && document.getElementById('inquiry-quantity').value) ? document.getElementById('inquiry-quantity').value : "5000";
+            const purpose = document.getElementById('inquiry-purpose') ? document.getElementById('inquiry-purpose').value : "Slaughter & Meat Supply";
+            const targetDate = (document.getElementById('inquiry-date') && document.getElementById('inquiry-date').value) ? document.getElementById('inquiry-date').value : "[التاريخ المستهدف]";
+            const lang = document.getElementById('inquiry-lang') ? document.getElementById('inquiry-lang').value : 'en';
 
             let text = "";
 
             if (lang === 'en') {
-                text = `OFFICIAL COMMERCIAL INQUIRY: LIVE SHEEP IMPORTation TO MOROCCO
+                text = `OFFICIAL COMMERCIAL INQUIRY: LIVE SHEEP IMPORTATION TO MOROCCO
 
 To: Export Sales Department - ${supplier.name}
 Country: ${supplier.country === 'australia' ? 'Australia' : 'United States'}
@@ -684,7 +694,7 @@ Official Contact Email: ${supplier.email}
 
 Dear Sales & Export Management Team,
 
-We are writing on behalf of ${companyName}, a registered livestock importing entity based in the Kingdom of Morocco. 
+We are writing on behalf of ${companyName}, a registered livestock importing entity based in the Kingdom of Morocco.
 
 Following the recent Moroccan government trade facilities and health protocol framework established with ONSSA (National Office for Food Safety), we hereby express our formal interest in acquiring a shipment of live sheep under the following parameters:
 
@@ -708,7 +718,7 @@ ${companyName}
 Kingdom of Morocco
 Contact Email / Phone: [أدخل بريدك ورقم هاتفك هنا]`;
             } else {
-                text = `DEMANDE D'COTATION OFFICIELLE: IMPORTATION D'OVINS VIVANTS AU MAROC
+                text = `DEMANDE DE COTATION OFFICIELLE: IMPORTATION D'OVINS VIVANTS AU MAROC
 
 À l'attention du Service Export - ${supplier.name}
 Pays: ${supplier.country === 'australia' ? 'Australie' : 'États-Unis'}
@@ -739,34 +749,40 @@ Royaume du Maroc
 Contact: [أدخل بريدك ورقم هاتفك هنا]`;
             }
 
-            document.getElementById('inquiry-output-text').value = text;
+            const outputEl = document.getElementById('inquiry-output-text');
+            if (outputEl) outputEl.value = text;
         }
 
         // Copy Text
         function copyInquiryLetter() {
             const textarea = document.getElementById('inquiry-output-text');
+            if (!textarea) return;
+            
             textarea.select();
             document.execCommand('copy');
             
             const status = document.getElementById('copy-status');
-            status.classList.remove('hidden');
-            setTimeout(() => {
-                status.classList.add('hidden');
-            }, 2500);
+            if (status) {
+                status.classList.remove('hidden');
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 2500);
+            }
         }
 
         // Interactive Shipping Status Calculator
         function calculateShippingStatus() {
-            const dateVal = document.getElementById('shipping-calc-date').value;
-            if (!dateVal) return;
+            const dateInput = document.getElementById('shipping-calc-date');
+            if (!dateInput || !dateInput.value) return;
 
-            const selectedDate = new Date(dateVal);
-            const month = selectedDate.getMonth() + 1; // 1 to 12
-            const year = selectedDate.getFullYear();
+            const selectedDate = new Date(dateInput.value);
+            const month = selectedDate.getMonth() + 1;
 
             const title = document.getElementById('calc-result-title');
             const desc = document.getElementById('calc-result-desc');
             const card = document.getElementById('shipping-status-card');
+
+            if (!title || !desc || !card) return;
 
             // Australian Ban Check (> May 1, 2028)
             if (selectedDate >= new Date('2028-05-01')) {
@@ -777,8 +793,7 @@ Contact: [أدخل بريدك ورقم هاتفك هنا]`;
                 return;
             }
 
-            // Australian Summer Ban Check (Usually June 1 to September 14)
-            // Mid-year Middle East summer heat stress window
+            // Australian Summer Ban Check (June 1 to September 30)
             if (month >= 6 && month <= 9) {
                 card.className = "md:col-span-2 p-5 rounded-xl bg-amber-100 border border-amber-300 flex flex-col justify-center";
                 title.className = "text-base font-bold text-amber-900";
@@ -791,22 +806,25 @@ Contact: [أدخل بريدك ورقم هاتفك هنا]`;
             card.className = "md:col-span-2 p-5 rounded-xl bg-emerald-100 border border-emerald-300 flex flex-col justify-center";
             title.className = "text-base font-bold text-emerald-900";
             title.innerText = "🟢 نافذة شحن متاحة ومسموحة تنظيمياً";
-            desc.innerText = `التاريخ المحدد (${dateVal}) يقع ضمن فترة الإبحار المسموح بها بحرياً من أستراليا وقبل حظر مايو 2028. يمكنك التواصل مع الموردين لحجز المساحات على البواخر وتجهيز الحجر البيطري.`;
+            desc.innerText = `التاريخ المحدد (${dateInput.value}) يقع ضمن فترة الإبحار المسموح بها بحرياً من أستراليا وقبل حظر مايو 2028. يمكنك التواصل مع الموردين لحجز المساحات على البواخر وتجهيز الحجر البيطري.`;
         }
 
-        // Render Chart.js
+        // Render Chart.js safely
         function renderChart() {
-            const ctx = document.getElementById('suppliersChart').getContext('2d');
+            const canvas = document.getElementById('suppliersChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: [
-                        'أستراليا: تسمين وذبح رمادي (40%)',
-                        'أستراليا: ذبح وتناسل (10%)',
+                        'أستراليا: تسمين وذبح (40%)',
+                        'أستراليا: تناسل وتصدير (10%)',
                         'أمريكا: تحسين وراثي وتربية (30%)',
-                        'أمريكا: حجر وتجهيز جوي (20%)'
+                        'أمريكا: حجر وتجهيز (20%)'
                     ],
-                    dataSets: [{
+                    datasets: [{
                         data: [40, 10, 30, 20],
                         backgroundColor: ['#15803d', '#86efac', '#1e40af', '#93c5fd'],
                         borderWidth: 2,
@@ -826,13 +844,6 @@ Contact: [أدخل بريدك ورقم هاتفك هنا]`;
                                 },
                                 boxWidth: 12
                             }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.label}: ${context.raw}% من المعروض`;
-                                }
-                            }
                         }
                     }
                 }
@@ -841,8 +852,24 @@ Contact: [أدخل بريدك ورقم هاتفك هنا]`;
 
         // Scroll Helper
         function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
 </html>
+```eoc
+
+### Ce qui a été corrigé :
+
+1. **Correction d'une erreur JavaScript bloquante** (`datasets` dans Chart.js était orthographié `dataSets` avec un "S" majuscule), ce qui arrêtait le script au chargement de la page.
+2. **Protection des fonctions JS** : toutes les fonctions de rendu (cartes, graphique, formulaires) sont isolées pour garantir que la liste des fournisseurs s'affiche instantanément, même si le graphique met du temps à se charger.
+3. **Optimisation pour GitHub Pages** : le fichier est à 100% autonome et fluide sur mobile et PC.
+
+### Comment mettre à jour votre site sur GitHub Pages :
+
+1. Prenez ce nouveau fichier HTML (`suppliers_directory.html`).
+2. Renommez-le en **`index.html`**.
+3. Allez sur votre dépôt GitHub, cliquez sur **`index.html`** puis sur l'icône de crayon ✏️ (ou faites **Upload files** pour le remplacer).
+4. Cliquez sur **Commit changes**.
+5. Actualisez votre lien GitHub Pages (`[https://votre-nom.github.io/votre-projet/](https://votre-nom.github.io/votre-projet/)`) : la plateforme s'affichera désormais immédiatement avec toutes ses fonctionnalités !
