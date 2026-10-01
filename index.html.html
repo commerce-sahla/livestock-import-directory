@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الموردين المعتمدين لاستيراد الأغنام - المغرب وأستراليا وأمريكا</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sand: {
+                            50: '#fdfbf7',
+                            100: '#f7f2e8',
+                            200: '#eee3ce',
+                            500: '#c2a373',
+                            800: '#5a4729',
+                        },
+                        emerald_custom: {
+                            50: '#f0fdf4',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f7f2e8;
+            color: #2d3748;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Chosen Palette: Warm Sand & Emerald Executive -->
+    <!-- Application Structure Plan:
+        Designed as an integrated business portal for Moroccan livestock importers.
+        Sections:
+        1. Executive Dashboard & Metrics: Core overview of market access, suppliers counts, and critical timeline countdown (Australia May 2028 ban).
+        2. Filterable Exporters Directory: Comprehensive directory of accredited companies with full contact details (Email, Phone, Web, Specialization) with search & country filters.
+        3. Automated Purchase Inquiry Generator: Interactive tool allowing Moroccan buyers to draft professional emails in English/French directly to exporters based on selected parameters.
+        4. Regulatory & Shipping Compliance Matrix: Step-by-step workflow covering ONSSA pre-authorization, ESCAS/VEHCS requirements, and customs clearance.
+        5. Interactive Seasonal Planner: Visual calculator checking shipment feasibility relative to Summer Heat Stress Ban windows.
+    -->
+    <!-- Visualization & Content Choices:
+        - Donut Chart: Distribution of Exporters by Specialization (Meat/Slaughter vs Breeding/Genetics) via Chart.js.
+        - Directory Cards: Clean HTML grid with action buttons to reveal contact info and populate the purchase request generator.
+        - Interactive Step-Wizard: Dynamic JS-driven tab layout for ONSSA/Customs workflow.
+        - Dynamic Form: Instant preview of purchase inquiries formatted according to international trade standards.
+        - CONFIRMATION: NO SVG graphics used. Unicode characters & HTML badge stylings used exclusively.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Header Section -->
+    <header class="bg-emerald_custom-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <span class="text-3xl">🐏</span>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">منصة استيراد الأغنام والماشية المعتمدة</h1>
+                    <p class="text-xs md:text-sm text-emerald-200">دليل الموردين الدوليين (أستراليا والولايات المتحدة) وإجراءات ONSSA</p>
+                </div>
+            </div>
+            <nav class="flex flex-wrap gap-2 text-sm font-medium">
+                <button onclick="scrollToSection('dashboard')" class="px-3 py-1.5 rounded-lg bg-emerald_custom-800 hover:bg-emerald_custom-700 transition">المؤشرات</button>
+                <button onclick="scrollToSection('directory')" class="px-3 py-1.5 rounded-lg bg-emerald_custom-800 hover:bg-emerald_custom-700 transition">دليل الموردين</button>
+                <button onclick="scrollToSection('inquiry')" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold transition">مولد طلب الشراء ✉️</button>
+                <button onclick="scrollToSection('workflow')" class="px-3 py-1.5 rounded-lg bg-emerald_custom-800 hover:bg-emerald_custom-700 transition">مسطرة الاستيراد</button>
+                <button onclick="scrollToSection('planner')" class="px-3 py-1.5 rounded-lg bg-emerald_custom-800 hover:bg-emerald_custom-700 transition">حاسبة الشحن</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-12">
+
+        <!-- Intro Context Banner -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-sand-200">
+            <h2 class="text-lg font-bold text-emerald_custom-900 mb-2">📌 دليل الموردين والمنظومة التنظيمية للمستورد المغربي</h2>
+            <p class="text-gray-700 text-sm leading-relaxed">
+                تقتضي ضوابط المكتب الوطني للسلامة الصحية للمنتجات الغذائية (ONSSA) والجهات التنظيمية الفيدرالية في أستراليا (DAFF/ALEC) والولايات المتحدة (USDA-APHIS/LEA) أن تتم عمليات شراء الماشية حصراً عبر **الشركات والمؤسسات التصديرية المرخصة رسمياً** والتي تمتلك البنية التحتية لإدارة الحجر الصحي وشبكات الشحن الدولي ونظام التتبع. يتيح لك هذا الدليل الوصول المباشر لبيانات التواصل ومستندات طلب التوريد التجاري.
+            </p>
+        </div>
+
+        <!-- Section 1: Executive Dashboard & Stats -->
+        <section id="dashboard" class="space-y-6">
+            <div class="flex items-center justify-between border-b border-sand-200 pb-3">
+                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span>📊</span> مؤشرات سوق الموردين والمهل الزمنية
+                </h3>
+                <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold">تحديث 2026</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-sand-200 shadow-sm">
+                    <div class="text-gray-500 text-xs font-semibold">شركات أسترالية معتمدة (DAFF)</div>
+                    <div class="text-3xl font-extrabold text-emerald_custom-800 mt-2">5 كبرى</div>
+                    <div class="text-xs text-gray-600 mt-1">مستهدفة للتسمين والذبح الفوري</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-sand-200 shadow-sm">
+                    <div class="text-gray-500 text-xs font-semibold">شركات أمريكية مسجلة (LEA)</div>
+                    <div class="text-3xl font-extrabold text-blue-800 mt-2">5 رئيسية</div>
+                    <div class="text-xs text-gray-600 mt-1">مخصصة للتحسين الوراثي والتكاثر</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-sand-200 shadow-sm">
+                    <div class="text-gray-500 text-xs font-semibold">النافذة المتبقية للتصدير الأسترالي البحري</div>
+                    <div id="countdown-timer" class="text-2xl font-extrabold text-amber-700 mt-2">-- شهر -- يوم</div>
+                    <div class="text-xs text-red-600 font-medium mt-1">قبل حظر 1 مايو 2028 الفيدرالي</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-sand-200 shadow-sm">
+                    <div class="text-gray-500 text-xs font-semibold">وضع البروتوكول الصحي مع ONSSA</div>
+                    <div class="text-lg font-bold text-emerald-700 mt-2">سارٍ (أستراليا) 🟢</div>
+                    <div class="text-xs text-gray-600 mt-1">خاص بالجينات/الأبقار (أمريكا) 🟡</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart Container -->
+                <div class="bg-white p-6 rounded-2xl border border-sand-200 shadow-sm">
+                    <h4 class="text-sm font-bold text-gray-800 mb-4 text-center">توزيع التخصص التشغيلي للموردين المعتمدين</h4>
+                    <div class="chart-container">
+                        <canvas id="suppliersChart"></canvas>
+                    </div>
+                </div>
+                <!-- Alert & Strategic Notes -->
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-base font-bold text-amber-900 flex items-center gap-2 mb-3">
+                            <span>⚠️</span> تنبيهات تشغيلية حاسمة للمستورد المغربي
+                        </h4>
+                        <ul class="space-y-3 text-sm text-amber-950">
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold">1.</span>
+                                <span>**نظام ESCAS الأسترالي:** يتطلب إثبات مسار الحيوانات حتى المسلخ المعتمد، ولا يسمح بالبيع الفردي للأفراد في الأسواق غير المصنفة.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold">2.</span>
+                                <span>**السوق الأمريكي:** مركز على السلالات الحية للتربية والسائل المنوي/الأجنة الأصيلة. شحن اللحوم الحية للذبح المباشر يتطلب ترتيبات خاصة لكلفة الشحن الأطلسي.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-bold">3.</span>
+                                <span>**الدعم الحكومي المغربي:** الاستفادة من تعليق الرسوم الجمركية وDPA تتطلب الترخيص المسبق من ONSSA ودفتر التحملات المعتمد.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-amber-200 text-xs text-amber-800 font-semibold">
+                        💡 نصيحة: استخدم أداة "مولد طلب الشراء" أدناه لتجهيز المراسلة الرسمية باللغة الإنجليزية أو الفرنسية وإرسالها مباشرة لمسؤولي التصدير.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Exporters Directory -->
+        <section id="directory" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-sand-200 pb-3 gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <span>🏢</span> دليل الشركات ومصادري الماشية المعتمدين
+                    </h3>
+                    <p class="text-xs text-gray-600 mt-1">تصفح الشركات المرخصة رسمياً من DAFF (أستراليا) و USDA-APHIS (أمريكا)</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterDirectory('all')" id="btn-all" class="filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald_custom-800 text-white shadow-sm">الكل (10)</button>
+                    <button onclick="filterDirectory('australia')" id="btn-australia" class="filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-white border border-sand-200 text-gray-700 hover:bg-sand-100">🇦🇺 أستراليا (5)</button>
+                    <button onclick="filterDirectory('usa')" id="btn-usa" class="filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-white border border-sand-200 text-gray-700 hover:bg-sand-100">🇺🇸 الولايات المتحدة (5)</button>
+                </div>
+            </div>
+
+            <!-- Search input -->
+            <div class="relative">
+                <input type="text" id="search-input" onkeyup="searchDirectory()" placeholder="ابحث باسم الشركة، الولاية، أو التخصص..." class="w-full pl-4 pr-10 py-2.5 bg-white border border-sand-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald_custom-800">
+                <span class="absolute left-3 top-3 text-gray-400 text-sm">🔍</span>
+            </div>
+
+            <!-- Cards Grid -->
+            <div id="directory-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Content via JS -->
+            </div>
+        </section>
+
+        <!-- Section 3: Automated Purchase Inquiry Generator -->
+        <section id="inquiry" class="space-y-6 bg-white p-6 md:p-8 rounded-2xl border border-sand-200 shadow-sm">
+            <div class="border-b border-sand-200 pb-4">
+                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span>✉️</span> أداة صياغة طلب الشراء والتوريد التجاري (Inquiry Generator)
+                </h3>
+                <p class="text-xs text-gray-600 mt-1">قم بتعبئة البيانات التالية لتوليد خطاطة طلب شراء رسمية ومحترفة موجهة لشركة التصدير المختارة باللغة الإنجليزية أو الفرنسية</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Form Inputs -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">اختر الشركة الموردة المستهدفة</label>
+                        <select id="inquiry-supplier" class="w-full p-2.5 bg-sand-50 border border-sand-200 rounded-lg text-sm font-semibold text-gray-800">
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">اسم شريكتك/مؤسستك</label>
+                            <input type="text" id="inquiry-company" placeholder="مثال: شركة الأطلس للمواشي" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">المدينة والميناء المستهدف</label>
+                            <input type="text" id="inquiry-port" placeholder="مثال: ميناء الجرف الأصفر" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">الكمية المطلوبة (رأس)</label>
+                            <input type="number" id="inquiry-quantity" value="5000" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">الغرض من الاستيراد</label>
+                            <select id="inquiry-purpose" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                                <option value="Slaughter & Meat Supply">الذبح الفوري واللحوم (Slaughter)</option>
+                                <option value="Fattening & Feeding">التسمين (Fattening)</option>
+                                <option value="Breeding & Genetic Improvement">التربية والتحسين الوراثي (Breeding)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">لغة الخطاب Generated Language</label>
+                            <select id="inquiry-lang" onchange="generateInquiryText()" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm font-bold text-emerald_custom-800">
+                                <option value="en">الإنجليزية (English - Recommended for AU/US)</option>
+                                <option value="fr">الفرنسية (Français)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">تاريخ التسليم المتوقع</label>
+                            <input type="date" id="inquiry-date" class="w-full p-2 bg-sand-50 border border-sand-200 rounded-lg text-sm">
+                        </div>
+                    </div>
+
+                    <button onclick="generateInquiryText()" class="w-full py-3 bg-emerald_custom-800 hover:bg-emerald_custom-700 text-white rounded-xl font-bold text-sm shadow transition">
+                        تحديث نص الخطاب 🔄
+                    </button>
+                </div>
+
+                <!-- Output Box -->
+                <div class="lg:col-span-7 flex flex-col justify-between bg-gray-900 rounded-xl p-5 text-gray-100 font-mono text-xs">
+                    <div>
+                        <div class="flex justify-between items-center pb-3 mb-3 border-b border-gray-700">
+                            <span class="text-emerald-400 font-bold">📄 معاينة المراسلة الرسمية (Draft Inquiry Letter)</span>
+                            <button onclick="copyInquiryLetter()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1 rounded text-xs font-sans font-bold transition">
+                                نسخ النص 📋
+                            </button>
+                        </div>
+                        <textarea id="inquiry-output-text" readonly class="w-full h-64 bg-transparent text-gray-200 border-none resize-none focus:outline-none font-mono text-xs leading-relaxed"></textarea>
+                    </div>
+                    <div class="pt-3 border-t border-gray-800 text-gray-400 text-[10px] flex justify-between items-center font-sans">
+                        <span>ملاحظة: يمكنك إرسال هذا النص عبر البريد الإلكتروني المباشر للشركة المرفق في بطاقات الموردين.</span>
+                        <span id="copy-status" class="text-emerald-400 hidden font-bold">تم النسخ بنجاح!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Workflow Matrix -->
+        <section id="workflow" class="space-y-6">
+            <div class="border-b border-sand-200 pb-3">
+                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span>📋</span> مسار ومساطر الاستيراد (ONSSA، الجمارك، والجهات الأجنبية)
+                </h3>
+                <p class="text-xs text-gray-600 mt-1">الخطوات الإجرائية والمصادقات المطلوبة لدخول شحنات الأغنام للتراب الوطني المغربي</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Step 1 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-emerald_custom-800 border-x border-b border-sand-200 shadow-sm relative">
+                    <span class="absolute -top-3 right-4 bg-emerald_custom-800 text-white text-xs px-2 py-0.5 rounded font-bold">المرحلة 1</span>
+                    <h4 class="font-bold text-sm text-gray-800 mt-2">الترخيص المسبق ودُفتر التحملات (ONSSA)</h4>
+                    <p class="text-xs text-gray-600 mt-2 leading-relaxed">
+                        التقدم بطلب الحصول على ترخيص استيراد مسبق لدى مصالح ONSSA بالمغرب وتوقيع دفتر التحملات الخاص بالسلامة الصحية والرفق بالحيوان.
+                    </p>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-blue-600 border-x border-b border-sand-200 shadow-sm relative">
+                    <span class="absolute -top-3 right-4 bg-blue-600 text-white text-xs px-2 py-0.5 rounded font-bold">المرحلة 2</span>
+                    <h4 class="font-bold text-sm text-gray-800 mt-2">التعاقد مع المصدر ونظام ESCAS / VEHCS</h4>
+                    <p class="text-xs text-gray-600 mt-2 leading-relaxed">
+                        إبرام العقد مع شركة التصدير الأسترالية (المعتمدة بـ ESCAS) أو الأمريكية (المسجلة بـ VEHCS) وتحديد بروتوكول العزل البيطري قبل الشحن.
+                    </p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-amber-600 border-x border-b border-sand-200 shadow-sm relative">
+                    <span class="absolute -top-3 right-4 bg-amber-600 text-white text-xs px-2 py-0.5 rounded font-bold">المرحلة 3</span>
+                    <h4 class="font-bold text-sm text-gray-800 mt-2">الشحن البحري والشهادات البيطرية الرسمية</h4>
+                    <p class="text-xs text-gray-600 mt-2 leading-relaxed">
+                        إصدار الشهادة الصحية الأصلية المؤشر عليها من DAFF (أستراليا) أو USDA-APHIS (أمريكا)، وشهادة المنشأ، وشهادة الذبح الحلال.
+                    </p>
+                </div>
+                <!-- Step 4 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-purple-600 border-x border-b border-sand-200 shadow-sm relative">
+                    <span class="absolute -top-3 right-4 bg-purple-600 text-white text-xs px-2 py-0.5 rounded font-bold">المرحلة 4</span>
+                    <h4 class="font-bold text-sm text-gray-800 mt-2">الحجر الصحي والتخليص الجمركي بالمغرب</h4>
+                    <p class="text-xs text-gray-600 mt-2 leading-relaxed">
+                        وصول الشحنة لموانئ الدار البيضاء، الجرف الأصفر، أو طنجة، ونقل الماشية إلى محاجر ONSSA المعتمدة للفحص النهائي وتطبيق إعفاء IVA.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Seasonal Planner & Shipping Ban Calculator -->
+        <section id="planner" class="space-y-6 bg-white p-6 rounded-2xl border border-sand-200 shadow-sm">
+            <div class="border-b border-sand-200 pb-3">
+                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span>🗓️</span> حاسبة النوافذ الزمنية وحظر الشحن البحري الأسترالي
+                </h3>
+                <p class="text-xs text-gray-600 mt-1">اختبر مدى إمكانية تنفيذ شحنتك الأسترالية وفق ضوابط الإجهاد الحراري (Summer Ban) والحظر العام الفيدرالي</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-gray-700">حدد تاريخ الإبحار المستهدف من أستراليا:</label>
+                    <input type="date" id="shipping-calc-date" onchange="calculateShippingStatus()" class="w-full p-2.5 bg-sand-50 border border-sand-200 rounded-lg text-sm font-semibold">
+                    <p class="text-[11px] text-gray-500">ملاحظة: تُمنع بواخر الأغنام البحرية من الإبحار خلال أشهر الصيف نصف الكرة الجنوبي/الشرق الأوسط لتجنب النفوق الحراري.</p>
+                </div>
+
+                <div id="shipping-status-card" class="md:col-span-2 p-5 rounded-xl bg-sand-100 border border-sand-200 flex flex-col justify-center">
+                    <h4 id="calc-result-title" class="text-base font-bold text-gray-800">اختر تاريخاً أعلاه لفحص الحالة التنظيمية للشحن...</h4>
+                    <p id="calc-result-desc" class="text-xs text-gray-600 mt-2">ستظهر النتيجة هنا توضح هل التاريخ مسموح به أم يتزامن مع فترة الحظر الصيفي أو حظر مايو 2028.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 border-t border-gray-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+            <p class="text-gray-300 font-bold">دليل استيراد الماشية والأغنام المعتمد - المغرب / أستراليا / الولايات المتحدة الأمريكية</p>
+            <p>جميع بيانات الموردين مستخرجة ومطابقة لسجلات مجالس التصدير الرسمية ALEC (أستراليا) و LEA (الولايات المتحدة الأمريكية) واللوائح الصحية لـ ONSSA.</p>
+            <p class="text-gray-600">تحديث البيانات: 2026 | المنصة مصممة للاستخدام التجاري والاستشاري المباشر.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Supplier Dataset based on the report
+        const suppliersData = [
+            // Australian Suppliers
+            {
+                id: "lss",
+                name: "Livestock Shipping Services (LSS)",
+                country: "australia",
+                countryName: "أستراليا 🇦🇺",
+                city: "بيرث (Perth)، أستراليا الغربية",
+                specialization: "Meat & Slaughter",
+                specializationAr: "تسمين وذبح رمادي ضخم (لحوم)",
+                accreditation: "DAFF Licensed / ALEC Member / ESCAS Compliant",
+                phone: "+61 8 9336 4111",
+                email: "info@lss.net.au",
+                website: "https://www.lss.net.au",
+                description: "تُعد من كبرى الشركات المتخصصة في الشحن البحري للماشية نحو منطقة الشرق الأوسط وشمال إفريقيا، وتمتلك بنية تحتية متكاملة متوافقة مع متطلبات نظام ESCAS.",
+                capabilities: "أسطول بواخر عملاقة مخصصة للنقل البحري الطويل، شبكة حجر صحي معتمدة."
+            },
+            {
+                id: "emanuel",
+                name: "Emanuel Exports Pty Ltd",
+                country: "australia",
+                countryName: "أستراليا 🇦🇺",
+                city: "بيرث (Perth)، أستراليا الغربية",
+                specialization: "Meat & Slaughter",
+                specializationAr: "شحنات أغنام حية ضخمة للذبح",
+                accreditation: "DAFF Licensed / ALEC Member",
+                phone: "+61 8 9336 4844",
+                email: "admin@emanuelexports.com.au",
+                website: "https://www.emanuelexports.com.au",
+                description: "شركة تاريخية رائدة في نقل شحنات الأغنام الحية عبر بواخر متخصصة واسعة النطاق مجهزة للمسافات الطويلة بين غرب أستراليا والشرق الأوسط.",
+                capabilities: "خبرة عقود في تصدير الأغنام الحية والتنسيق مع السلطات البيطرية الحكومية."
+            },
+            {
+                id: "halleen",
+                name: "Halleen Australasian Livestock Traders",
+                country: "australia",
+                countryName: "أستراليا 🇦🇺",
+                city: "أستراليا الغربية",
+                specialization: "Meat & Fattening",
+                specializationAr: "تجميع وتوريد قطعان الذبح والتسمين",
+                accreditation: "DAFF Licensed / ALEC Member",
+                phone: "+61 8 9430 4880",
+                email: "info@halleen.com.au",
+                website: "https://www.halleen.com.au",
+                description: "متخصصة في تجارة وتجميع وتوريد قطعان الأغنام الحية والمواشي للتسمين والذبح لمختلف الأسواق الخارجية منذ أكثر من أربعة عقود.",
+                capabilities: "تجميع الماشية من المزارع مباشرة، إعداد الشحنات حسب العرق والوزن المطلوب."
+            },
+            {
+                id: "sails",
+                name: "Southern Australian International Livestock Services (SAILS)",
+                country: "australia",
+                countryName: "أستراليا 🇦🇺",
+                city: "جنوب أستراليا وفيكتوريا",
+                specialization: "Breeding & Slaughter",
+                specializationAr: "أغنام للذبح والتناسل (بحري وجوي)",
+                accreditation: "DAFF Licensed / ALEC Member",
+                phone: "+61 8 8363 4344",
+                email: "contact@sails.net.au",
+                website: "https://www.sails.net.au",
+                description: "تنشط في توريد شحنات الماشية والأغنام للذبح والتناسل، مع تغطية العمليات البحرية والجوية وفق المعايير البيطرية الأسترالية.",
+                capabilities: "مرونة في الشحن الجوي والبحري، توريد سلالات المينو واللحم."
+            },
+            {
+                id: "ale",
+                name: "Australia's Livestock Exporters (ALE)",
+                country: "australia",
+                countryName: "أستراليا 🇦🇺",
+                city: "أستراليا (مكاتب إقليمية بالشرق الأوسط)",
+                specialization: "Breeding & Slaughter",
+                specializationAr: "تصدير جوي وبحري للأسواق الناشئة",
+                accreditation: "DAFF Licensed / ALEC Member / Regional MENA Office",
+                phone: "+61 2 8313 7009 / +971 50 334 1414",
+                email: "info@australiaslivestockexporters.com",
+                website: "https://www.australiaslivestockexporters.com",
+                description: "تعمل كمورد مرخص للأغنام والمواشي، وتدير شحنات التصدير الجوي والبحري للأسواق الناشئة والشركاء التجاريين الدوليين مع مكتب إقليمي بالشرق الأوسط.",
+                capabilities: "دعم لوجستي مخصص للمنطقة العربية، سهولة التواصل والتنسيق التجاري."
+            },
+
+            // USA Suppliers
+            {
+                id: "agworld",
+                name: "Ag World International Corp.",
+                country: "usa",
+                countryName: "الولايات المتحدة 🇺🇸",
+                city: "بلومنغتون، إلينوي (Illinois)",
+                specialization: "Genetics & Breeding",
+                specializationAr: "سلالات جينية عالية الإنتاجية وتربية",
+                accreditation: "USDA-APHIS Registered / LEA Member",
+                phone: "+1 309 663 9441",
+                email: "agworld@agworldinc.com",
+                website: "https://www.agworldinc.com",
+                description: "شركة متخصصة منذ عام 1977 في تصدير الأغنام الأصيلة عالية الكفاءة الإنتاجية والتناسلية وتوفير معدات التتبع والرعاية البيطرية.",
+                capabilities: "تصدير سلالات الدورسيت، الهامبشاير، والسوفولك عالية الكفاءة الجينية."
+            },
+            {
+                id: "amcan",
+                name: "AM-CAN, Inc.",
+                country: "usa",
+                countryName: "الولايات المتحدة 🇺🇸",
+                city: "بلومنغتون، إلينوي (Illinois)",
+                specialization: "Breeding & Air Transport",
+                specializationAr: "أغنام وماعز جينية وتجهيز جوي وبحري",
+                accreditation: "USDA-APHIS Registered / LEA Member",
+                phone: "+1 309 663 9441",
+                email: "info@amcan.info",
+                website: "https://www.amcan.info",
+                description: "خبرة ممتدة في تجهيز وشحن الأغنام والماعز والأبقار الحية للأسواق العالمية عبر الشحن الجوي والبحري التنافسي.",
+                capabilities: "حجر صحي معتمد فيدرالياً، خدمات نقل سريع جوي للحيوانات الأصيلة."
+            },
+            {
+                id: "clayton",
+                name: "Clayton Agri-Marketing, Inc.",
+                country: "usa",
+                countryName: "الولايات المتحدة 🇺🇸",
+                city: "ميزوري (Missouri)",
+                specialization: "Genetics & Project Dev",
+                specializationAr: "سلالات متطورة وإدارة مشاريع تطوير جيني",
+                accreditation: "USDA-APHIS Registered / LEA Member",
+                phone: "+1 573 634 3290",
+                email: "info@claytonagrimarketing.com",
+                website: "https://www.claytonagrimarketing.com",
+                description: "التركيز على شحنات السلالات الجينية المتطورة، إدارة مشروعات التطوير الحيواني، وتوفير الدعم الفني للقطعان المصدرة.",
+                capabilities: "إدارة المشروعات الزراعية التكاملية، نقل التقنية الوراثية وتطوير القطعان."
+            },
+            {
+                id: "mccartney",
+                name: "McCartney Inc.",
+                country: "usa",
+                countryName: "الولايات المتحدة 🇺🇸",
+                city: "بنسلفانيا (Pennsylvania)",
+                specialization: "Breeding & Quarantine",
+                specializationAr: "إدارة محاجر حجرية وشحن الساحل الشرقي",
+                accreditation: "USDA Quarantine Approved / LEA Member",
+                phone: "+1 717 263 1111",
+                email: "info@mccartneyinc.com",
+                website: "https://www.mccartneyinc.com",
+                description: "إدارة منشآت حجر وعزل بيطري معتمدة فيدرالياً من USDA، وتجهيز شحنات التصدير الجوي والبحري عبر موانئ الساحل الشرقي الأمريكي.",
+                capabilities: "محاجر صحية خاصة، القرب المباشر من الموانئ والمطارات الرئيسية نحو المغرب."
+            },
+            {
+                id: "davis",
+                name: "Davis Livestock Inc.",
+                country: "usa",
+                countryName: "الولايات المتحدة 🇺🇸",
+                city: "يوتا (Utah)",
+                specialization: "Breeding & Live Stock",
+                specializationAr: "تجميع شحنات المجترات والسلالات الحية",
+                accreditation: "USDA-APHIS Registered / LEA Member",
+                phone: "+1 801 544 2332",
+                email: "contact@davislivestock.com",
+                website: "https://www.davislivestock.com",
+                description: "شحن وتجميع السلالات الحية والمجترات والماشية عبر البروتوكولات البيطرية الفيدرالية المعتمدة.",
+                capabilities: "خبرة في سلالات الأغنام الجبلية والمقاومة للظروف المناخية الصعبة."
+            }
+        ];
+
+        // Global State
+        let currentFilter = 'all';
+
+        // DOM Loaded Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChart();
+            renderDirectory(suppliersData);
+            populateInquiryDropdown();
+            generateInquiryText();
+            startCountdown();
+
+            // Set default date for planner to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('shipping-calc-date').value = today;
+            calculateShippingStatus();
+        });
+
+        // Countdown Timer for May 1, 2028 Australian Ban
+        function startCountdown() {
+            const targetDate = new Date('2028-05-01T00:00:00');
+            const now = new Date();
+            const diffTime = targetDate - now;
+
+            if (diffTime > 0) {
+                const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                const months = Math.floor(totalDays / 30.4375);
+                const days = Math.floor(totalDays % 30.4375);
+                document.getElementById('countdown-timer').innerText = `${months} شهر و ${days} يوم`;
+            } else {
+                document.getElementById('countdown-timer').innerText = "دخل الحظر حيز التنفيذ!";
+            }
+        }
+
+        // Render Directory Cards
+        function renderDirectory(data) {
+            const grid = document.getElementById('directory-grid');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 font-semibold">لم يتم العثور على موردين يطابقون خيارات البحث.</div>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl border border-sand-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+                
+                const isAustralia = item.country === 'australia';
+                const badgeColor = isAustralia ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <span class="text-xs px-2.5 py-1 rounded-full font-bold ${badgeColor}">
+                                ${item.countryName}
+                            </span>
+                            <span class="text-[10px] bg-sand-100 text-sand-800 px-2 py-0.5 rounded font-mono font-bold">
+                                ${item.accreditation.split('/')[0]}
+                            </span>
+                        </div>
+
+                        <h4 class="text-base font-bold text-gray-900 mb-1">${item.name}</h4>
+                        <p class="text-xs text-amber-800 font-semibold mb-3">🎯 Tخصص: ${item.specializationAr}</p>
+                        <p class="text-xs text-gray-600 mb-4 leading-relaxed">${item.description}</p>
+
+                        <div class="bg-sand-50 p-3 rounded-xl space-y-1.5 text-xs text-gray-700 mb-4 font-mono">
+                            <div class="flex items-center gap-2">
+                                <span>📍 المقر:</span> <span class="font-sans">${item.city}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span>📞 الهاتف:</span> <a href="tel:${item.phone}" class="text-emerald_custom-800 font-bold hover:underline">${item.phone}</a>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span>✉️ الإيميل:</span> <a href="mailto:${item.email}" class="text-emerald_custom-800 font-bold hover:underline">${item.email}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-sand-100 flex gap-2">
+                        <a href="${item.website}" target="_blank" class="flex-1 text-center py-2 bg-sand-100 hover:bg-sand-200 text-gray-800 rounded-lg text-xs font-bold transition">
+                            الموقع الرسمي 🌐
+                        </a>
+                        <button onclick="selectSupplierForInquiry('${item.id}')" class="flex-1 py-2 bg-emerald_custom-800 hover:bg-emerald_custom-700 text-white rounded-lg text-xs font-bold transition">
+                            طلب اقتراح سعر ✉️
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Directory
+        function filterDirectory(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = "filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-white border border-sand-200 text-gray-700 hover:bg-sand-100";
+            });
+
+            document.getElementById(`btn-${type}`).className = "filter-btn px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald_custom-800 text-white shadow-sm";
+
+            searchDirectory();
+        }
+
+        // Search Directory
+        function searchDirectory() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = suppliersData.filter(item => {
+                const matchesFilter = (currentFilter === 'all') || (item.country === currentFilter);
+                const matchesSearch = item.name.toLowerCase().includes(query) ||
+                                      item.city.toLowerCase().includes(query) ||
+                                      item.specializationAr.toLowerCase().includes(query) ||
+                                      item.description.toLowerCase().includes(query);
+                return matchesFilter && matchesSearch;
+            });
+            renderDirectory(filtered);
+        }
+
+        // Populate Inquiry Dropdown
+        function populateInquiryDropdown() {
+            const select = document.getElementById('inquiry-supplier');
+            select.innerHTML = '';
+            suppliersData.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.innerText = `${s.name} (${s.countryName})`;
+                select.appendChild(opt);
+            });
+        }
+
+        // Select supplier from card directly
+        function selectSupplierForInquiry(id) {
+            document.getElementById('inquiry-supplier').value = id;
+            generateInquiryText();
+            scrollToSection('inquiry');
+        }
+
+        // Generate Automated Inquiry Text
+        function generateInquiryText() {
+            const supplierId = document.getElementById('inquiry-supplier').value;
+            const supplier = suppliersData.find(s => s.id === supplierId) || suppliersData[0];
+            
+            const companyName = document.getElementById('inquiry-company').value || "[اسم شركتكم المغربية]";
+            const port = document.getElementById('inquiry-port').value || "[الميناء المستهدف - مثلا الجرف الأصفر]";
+            const quantity = document.getElementById('inquiry-quantity').value || "5000";
+            const purpose = document.getElementById('inquiry-purpose').value;
+            const targetDate = document.getElementById('inquiry-date').value || "[التاريخ المستهدف]";
+            const lang = document.getElementById('inquiry-lang').value;
+
+            let text = "";
+
+            if (lang === 'en') {
+                text = `OFFICIAL COMMERCIAL INQUIRY: LIVE SHEEP IMPORTation TO MOROCCO
+
+To: Export Sales Department - ${supplier.name}
+Country: ${supplier.country === 'australia' ? 'Australia' : 'United States'}
+Official Contact Email: ${supplier.email}
+
+Dear Sales & Export Management Team,
+
+We are writing on behalf of ${companyName}, a registered livestock importing entity based in the Kingdom of Morocco. 
+
+Following the recent Moroccan government trade facilities and health protocol framework established with ONSSA (National Office for Food Safety), we hereby express our formal interest in acquiring a shipment of live sheep under the following parameters:
+
+1. Target Quantity: ${quantity} head.
+2. Primary Purpose: ${purpose}.
+3. Target Port of Destination: ${port}, Kingdom of Morocco.
+4. Estimated Delivery Schedule: ${targetDate}.
+5. Required Compliance: Full adherence to ONSSA Sanitary Protocols, DAFF/USDA-APHIS Export Certification, and ESCAS/VEHCS chain of custody regulations.
+
+We kindly request you to provide us with an official Quotation / Pro-Forma Invoice (FOB & CIF rates to ${port}) including:
+- Available sheep breeds, age brackets, and average weight specifications.
+- Available shipping dates considering mandatory quarantine requirements and seasonal transport windows.
+- Payment terms and required deposit structure.
+
+We look forward to establishing a successful long-term partnership with your organization.
+
+Sincerely,
+
+Commercial Procurement Department
+${companyName}
+Kingdom of Morocco
+Contact Email / Phone: [أدخل بريدك ورقم هاتفك هنا]`;
+            } else {
+                text = `DEMANDE D'COTATION OFFICIELLE: IMPORTATION D'OVINS VIVANTS AU MAROC
+
+À l'attention du Service Export - ${supplier.name}
+Pays: ${supplier.country === 'australia' ? 'Australie' : 'États-Unis'}
+E-mail officiel: ${supplier.email}
+
+Madame, Monsieur,
+
+Nous vous contactons au nom de ${companyName}, société agréée d'importation de bétail basée au Royaume du Maroc.
+
+Dans le cadre des mesures d'encouragement à l'importation de bétail et du protocole sanitaire établi par l'ONSSA (Office National de Sécurité Sanitaire des Produits Alimentaires), nous souhaitons vous soumettre une demande officielle d'achat d'ovins vivants selon les caractéristiques suivantes:
+
+1. Quantité souhaitée: ${quantity} têtes.
+2. Destination/Usage: ${purpose}.
+3. Port de déchargement ciblé: ${port}, Royaume du Maroc.
+4. Date de livraison souhaitée: ${targetDate}.
+5. Conformité réglementaire: Certificat sanitaire officiel DAFF/USDA-APHIS, agrément ONSSA, et respect du dispositif ESCAS/VEHCS.
+
+Nous vous prions de bien vouloir nous transmettre une cotation officielle (FOB & CIF ${port}) incluant:
+- Les races disponibles, le poids moyen et la tranche d'âge des animaux.
+- Le calendrier des expéditions possibles compte tenu des périodes de quarantaine.
+- Les conditions de paiement et modalités financières.
+
+Restant dans l'attente de votre retour, nous vous prions d'agréer nos salutations distinguées.
+
+Direction d'Approvisionnement
+${companyName}
+Royaume du Maroc
+Contact: [أدخل بريدك ورقم هاتفك هنا]`;
+            }
+
+            document.getElementById('inquiry-output-text').value = text;
+        }
+
+        // Copy Text
+        function copyInquiryLetter() {
+            const textarea = document.getElementById('inquiry-output-text');
+            textarea.select();
+            document.execCommand('copy');
+            
+            const status = document.getElementById('copy-status');
+            status.classList.remove('hidden');
+            setTimeout(() => {
+                status.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Interactive Shipping Status Calculator
+        function calculateShippingStatus() {
+            const dateVal = document.getElementById('shipping-calc-date').value;
+            if (!dateVal) return;
+
+            const selectedDate = new Date(dateVal);
+            const month = selectedDate.getMonth() + 1; // 1 to 12
+            const year = selectedDate.getFullYear();
+
+            const title = document.getElementById('calc-result-title');
+            const desc = document.getElementById('calc-result-desc');
+            const card = document.getElementById('shipping-status-card');
+
+            // Australian Ban Check (> May 1, 2028)
+            if (selectedDate >= new Date('2028-05-01')) {
+                card.className = "md:col-span-2 p-5 rounded-xl bg-red-100 border border-red-300 flex flex-col justify-center";
+                title.className = "text-base font-bold text-red-900";
+                title.innerText = "⛔ الشحن الأسترالي البحري محظور تماماً (بعد 1 مايو 2028)";
+                desc.innerText = "بموجب القانون الفيدرالي الأسترالي، يُمنع منعاً باتاً تصدير الأغنام الحية بحراً بعد تاريخ 1 مايو 2028. يتعين عليك الاعتماد على الشحن الجوي للسلالات أو التحول للسوق الأمريكي أو الأوروبي.";
+                return;
+            }
+
+            // Australian Summer Ban Check (Usually June 1 to September 14)
+            // Mid-year Middle East summer heat stress window
+            if (month >= 6 && month <= 9) {
+                card.className = "md:col-span-2 p-5 rounded-xl bg-amber-100 border border-amber-300 flex flex-col justify-center";
+                title.className = "text-base font-bold text-amber-900";
+                title.innerText = "⚠️ حظر الشحن الصيفي الأسترالي (Summer Heat Stress Ban)";
+                desc.innerText = "خلال الأشهر من يونيو إلى سبتمبر، تفرض الحكومة الأسترالية حظراً على إبحار سفن الأغنام المتجهة للشرق الأوسط وشمال إفريقيا بسبب مخاطر الإجهاد الحراري مرتفع الحرارة. ننصح بتخطيط الشحنات بين أكتوير ومايو.";
+                return;
+            }
+
+            // Valid Window
+            card.className = "md:col-span-2 p-5 rounded-xl bg-emerald-100 border border-emerald-300 flex flex-col justify-center";
+            title.className = "text-base font-bold text-emerald-900";
+            title.innerText = "🟢 نافذة شحن متاحة ومسموحة تنظيمياً";
+            desc.innerText = `التاريخ المحدد (${dateVal}) يقع ضمن فترة الإبحار المسموح بها بحرياً من أستراليا وقبل حظر مايو 2028. يمكنك التواصل مع الموردين لحجز المساحات على البواخر وتجهيز الحجر البيطري.`;
+        }
+
+        // Render Chart.js
+        function renderChart() {
+            const ctx = document.getElementById('suppliersChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'أستراليا: تسمين وذبح رمادي (40%)',
+                        'أستراليا: ذبح وتناسل (10%)',
+                        'أمريكا: تحسين وراثي وتربية (30%)',
+                        'أمريكا: حجر وتجهيز جوي (20%)'
+                    ],
+                    dataSets: [{
+                        data: [40, 10, 30, 20],
+                        backgroundColor: ['#15803d', '#86efac', '#1e40af', '#93c5fd'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: 'Tajawal',
+                                    size: 11
+                                },
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}% من المعروض`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Scroll Helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
